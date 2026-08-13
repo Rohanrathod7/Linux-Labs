@@ -1,0 +1,5 @@
+rm -rf /tmp/module3_lab
+tree /tmp/module3_lab/reports
+tree /tmp/module3_lab
+makdir -p /tmp/module3_lab/reports
+mkdir -p /tmp/module3_lab/reports

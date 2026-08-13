@@ -1,0 +1,26 @@
+sudo rm -rf /tmp/module4_lab
+mkdir -p /tmp/module4_lab/shared_project
+mkdir -p /tmp/module4_lab/public_drop
+tree mkdir -p /tmp/module4_lab
+sudo chown dev_lead:dev_team /tmp/module4_lab/shared_project
+sudo chmod 2770 /tmp/module4_lab/shared_project
+ls -ld /tmp/module4_lab/shared_project
+sudo -u dev_lead touch /tmp/module4_lab/shared_project/architecture_v1.txt
+ls -ld /tmp/module4_lab/shared_project/architecture_v1.txt
+ls -l /tmp/module4_lab/shared_project/architecture_v1.txt
+sudo -u dev_lead ls -l /tmp/module4_lab/shared_project/architecture_v1.txt
+sudo chmod 1777 /tmp/module4_lab/public_drop
+ls -ld /tmp/module4_lab/public_drop
+sudo -u dev_lead touch /tmp/module4_lab/public_drop/lead_notes.txt
+sudo -u dev_auditor touch /tmp/module4_lab/public_drop/lead_notes.txt
+sudo -u dev_auditor touch /tmp/module4_lab/public_drop/audit_logs.txt
+sudo -u dev_auditor rm /tmp/module4_lab/public_drop/lead_notes.txt 2>&1 | grep "Operation not permitted"
+sudo -u dev_auditor rm /tmp/module4_lab/public_drop/lead_notes.txt 2>&1
+getfacl /tmp/module4_lab/shared_project
+sudo setfact -m u:dev_auditor:r-x /tmp/module4_lab/shared_project
+sudo setfacl -m u:dev_auditor:r-x /tmp/module4_lab/shared_project
+sudo setfacl -m d:u:dev_auditor:r-- /tmp/module4_lab/shared_project/architecture_v1.txt
+sudo setfacl -m d:u:dev_auditor:r-- /tmp/module4_lab/shared_project
+ls -ld /tmp/module4_lab/shared_project
+getfacl /tmp/module4_lab/shared_project
+sudo -u dev_auditor cat /tmp/module4_lab/shared_project/architecture_v1.txt

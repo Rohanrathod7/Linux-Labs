@@ -1,0 +1,25 @@
+rm -rf /tmp/module2_lab
+mkdir -p /tmp/module2_lab/logs
+mkdir -p /tmp/module2_lab/reports
+cat << 'EOF' > /tmp/module2_lab/logs/access.log                                                         192.168.1.10 - - [13/Aug/2026:10:00:01 +0000] "GET /api/v1/products HTTP/1.1" 200 1420 "token=abc123secret"
+cat << 'EOF' > /tmp/module2_lab/logs/access.log                                                         192.168.1.10 - - [13/Aug/2026:10:00:01 +0000] "GET /api/v1/products HTTP/1.1" 200 1420 "token=abc123secret"
+cat << 'EOF' > /tmp/module2_lab/logs/access.log
+head /tmp/module2_lab/logs/access.log
+head -n 3 /tmp/module2_lab/logs/access.log
+tail -n 3 /tmp/module2_lab/logs/access.log
+wc -l /tmp/module2_lab/logs/access.log
+grep -E " 5[0-9]{2} " /tmp/module2_lab/logs/access.log
+grep -E " 5[0-9]{2} " /tmp/module2_lab/logs/access.log > /tmp/module2_lab/reports/5xx_errors.log
+grep -E " 5[0-9]{2} " /tmp/module2_lab/reports/5xx_errors.log
+grep -c -E " 5[0-9]{2} " /tmp/module2_lab/reports/5xx_errors.log
+cat /tmp/module2_lab/reports/5xx_errors.log
+awk '{print $1}' /tmp/module2_lab/reports/5xx_errors.log
+awk '{print $1}' /tmp/module2_lab/reports/5xx_errors.log | sort | uniq -c | sort -nr
+awk '{print $1}' /tmp/module2_lab/reports/5xx_errors.log | sort | uniq -c | sort -nr > /tmp/module2_lab/reports/top_ips.txt
+cat /tmp/module2_lab/reports/top_ips.txt
+sed 's/token=[^"]*/token=REDACTED/g' /tmp/module2_lab/logs/access.log
+sed 's/token=[^"]*/token=REDACTED/g' /tmp/module2_lab/logs/access.log > /tmp/module2_lab/reports/sanitized_access.log
+grep "secreate" /tmp/module2_lab/reports/sanitized_access.log || echo "Verification Passed: No secret tokens found!"
+if [ -f "/tmp/module2_lab/reports/5xx_errors.log" ]; then     ERR_COUNT=$(wc -l < /tmp/module2_lab/reports/5xx_errors.log);     if [ "$ERR_COUNT" -eq 5 ]; then         echo "[PASS] 5xx_errors.log accurately captured all 5 error records.";     else         echo "[FAIL] Expected 5 lines in 5xx_errors.log, got $ERR_COUNT";         ERRORS=$((ERRORS+1));     fi; else     echo "[FAIL] Missing /tmp/module2_lab/reports/5xx_errors.log";     ERRORS=$((ERRORS+1)); fi
+if [ -f "/tmp/module2_lab/reports/top_ips.txt" ]; then     TOP_IP=$(head -n 1 /tmp/module2_lab/reports/top_ips.txt | awk '{print $2}');     if [ "$TOP_IP" = "192.168.1.15" ]; then         echo "[PASS] top_ips.txt correctly identified 192.168.1.15 as the top requester.";     else         echo "[FAIL] Expected top IP '192.168.1.15', got '$TOP_IP'";         ERRORS=$((ERRORS+1));     fi; else     echo "[FAIL] Missing /tmp/module2_lab/reports/top_ips.txt";     ERRORS=$((ERRORS+1)); fi
+if [ -f "/tmp/module2_lab/reports/sanitized_access.log" ]; then     LEAKS=$(grep -c "secret" /tmp/module2_lab/reports/sanitized_access.log);     if [ "$LEAKS" -eq 0 ]; then         echo "[PASS] sanitized_access.log contains zero leaked secret tokens.";     else         echo "[FAIL] Found $LEAKS un-sanitized token secrets in sanitized_access.log";         ERRORS=$((ERRORS+1));     fi; else     echo "[FAIL] Missing /tmp/module2_lab/reports/sanitized_access.log";     ERRORS=$((ERRORS+1)); fi

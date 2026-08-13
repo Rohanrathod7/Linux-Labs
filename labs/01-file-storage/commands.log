@@ -1,0 +1,28 @@
+mkdir -p module1_lab
+ls module1_lab
+mkdir -p /tmp/module1_lab/raw_deploy/config
+mkdir -p /tmp/module1_lab/raw_deploy/logs_backup
+mkdir -p /tmp/module1_lab/raw_deploy/stray_files/nested
+mkdir -p /tmp/module1_lab/old_staging
+ls module1_lab
+echo "PORT:8080" > /tmp/module1_lab/raw_deploy/config/app.env
+cat /tmp/module1_lab/raw_deploy/config/app.env
+echo "DB_HOST=localhost" > /tmp/module1_lab/raw_deploy/config/db.conf
+echo "Error: DB timeout" > /tmp/module1_lab/raw_deploy/error_2026.log
+echo "Info: Service started" > /tmp/module1_lab/raw_deploy/stray_files/access_2026.log
+echo "Debug: Connection reset" > /tmp/module1_lab/raw_deploy/stray_files/nested/debug_2026.log
+echo "TEMP STAGING DATA" > /tmp/module1_lab/old_staging/temp_build.tmp
+echo "OBSOLETE CACHE" > /tmp/module1_lab/old_staging/cache.bak
+cd /tmp/module1_lab
+tree /tmp/module1_lab
+mkdir -p /tmp/module1_lab/app_v2/releases/prod
+mkdir -p /tmp/module1_lab/app_v2/logs
+cp -rp /tmp/module1_lab/raw_deploy/config /tmp/module1_lab/app_v2/releases/prod/
+ls -l /tmp/module1_lab/app_v2/releases/prod/config/
+find /tmp/module1_lab/raw_deploy -type f -name *.log
+find /tmp/module1_lab/raw_deploy -type f -name "*.log" -exec mv -v {} /tmp/module1_lab/app_v2/logs/ \;
+ls -l /tmp/module1_lab/app_v2/logs/
+rm -rf {/tmp/module1_lab/old_staging, /tmp/module1_lab/raw_deploy}
+tree /tmp/module1_lab
+rm -rf {/tmp/module1_lab/old_staging,/tmp/module1_lab/raw_deploy}
+tree /tmp/module1_lab

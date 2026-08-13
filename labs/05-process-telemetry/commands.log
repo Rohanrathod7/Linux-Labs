@@ -1,0 +1,13 @@
+rm -rf /tmp/module5_lab
+mkdir -p /tmp/module5_lab
+cat << 'EOF' > /tmp/module5_lab/runaway_cpu.sh
+cat << 'EOF' > /tmp/module5_lab/worker_task.sh
+cat /tmp/module5_lab/runaway_cpu.sh
+cat /tmp/module5_lab/worker_task.sh
+chmod +x /tmp/module5_lab/*.sh
+/tmp/module5_lab/*.sh &
+echo "Module 5 Lab Initialized in /tmp/module5_lab/!"
+sudo nice -10 nohup /tmp/module5_lab/worker_task.sh > /tmp/module5_lab/worker.log 2>&1
+sudo nice -n 10 nohup /tmp/module5_lab/worker_task.sh > /tmp/module5_lab/worker.log 2>&1
+sudo nice -n -10 nohup /tmp/module5_lab/worker_task.sh > /tmp/module5_lab/worker.log 2>&1
+sudo nice -n -10 nohup /tmp/module5_lab/worker_task.sh > /tmp/module5_lab/worker.log 2>&1 &
